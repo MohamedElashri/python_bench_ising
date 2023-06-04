@@ -8,9 +8,31 @@ The benchmark is based on the code from the ising.py file which implemented the 
 
 ## packages
 
-I used `numpy-1.23.4` for all different version of python used in the benchmark. This is the latest version of `numpy`. 
+Previously I used `numpy` but this wasn't ideal situation because I introduced a dependency. So I decided to use the standard library `random` and `math` to implement the simulation. 
+The old `ising.py` file containts this code. But the standatd implementation is in `ising_model.py` file.
 
-## Results
+
+## Results (Standard Python Library)
+
+The benchmarks are executed on Macbook pro Apple Silicon M1 version. The python version are installed using `homebrew`
+
+The arguments of the script are L(length of the lattice),  n(number of Monte Carlo cycles).
+
+Also there is a `run_bench.sh` script that runs the benchmark for all the python versions (3.8-3.11) for different `n` and `L` values. 
+
+The results are stored in `results` folder. You can reproduce the results by running the `run_bench.sh` script.
+
+These are the plots that are generated from the results (using `plot_results.py` script). I use the `png` as Github doesn't support embedded `pdf` files in the `README.md`.
+
+![L=10](results/plots/Time_vs_Python_Version_L_10.png)
+![plot](results/plots/Time_vs_Python_Version_L_20.png)
+![plot](results/plots/Time_vs_Python_Version_n_10000.png)
+![plot](results/plots/Time_vs_Python_Version_n_20000.png)
+![plot](results/plots/Time_vs_Python_Version_n_30000.png)
+
+
+
+## Results (With NumPy)
 
 The benchmarks are executed on Macbook pro Apple Silicon M1 version. The python version are installed using `homebrew`
 
