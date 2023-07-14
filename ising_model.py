@@ -1,7 +1,7 @@
 # 2d Ising Model Montecarlo Simulation using Metropolis Algorithm
 # This script is being used for python benchmarking
 # Author: Mohamed Elashri
-# Email: mohamed.elashri@cern.ch
+# Email: mail@elashri.com
 # Uagent: python ising_model.py <Lattice_size> <Number_of_time_steps>
 
 
