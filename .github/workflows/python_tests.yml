@@ -16,13 +16,11 @@ jobs:
       python-matrix: ${{ steps.get-python-versions.outputs.python-versions }}
     steps:
     - uses: actions/checkout@v3
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.x'
     - name: Fetch Python versions
       id: get-python-versions
-      run: echo "::set-output name=python-versions::$(python fetch_python_versions.py)"
+      run: |
+        chmod +x fetch_python_versions.sh
+        echo "::set-output name=python-versions::$(./fetch_python_versions.sh)"
 
   test:
     needs: get-python-versions
@@ -30,7 +28,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ${{ fromJson(needs.get-python-versions.outputs.python-matrix || '[]') }}
+        python-version: ${{ fromJson(needs.get-python-versions.outputs.python-matrix) }}
 
     steps:
     - uses: actions/checkout@v3
