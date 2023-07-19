@@ -13,14 +13,13 @@ jobs:
   get-python-versions:
     runs-on: ubuntu-latest
     outputs:
-      python-matrix: ${{ steps.get-python-versions.outputs.python-versions }}
+      python-matrix: ${{ steps.get-python-versions-action.outputs.latest-python-versions }}
     steps:
-    - uses: actions/checkout@v3
-    - name: Fetch Python versions
-      id: get-python-versions
-      run: |
-        chmod +x fetch_python_versions.sh
-        echo "::set-output name=python-versions::$(./fetch_python_versions.sh)"
+    - uses: snok/latest-python-versions@v1
+      id: get-python-versions-action
+      with:
+        min-version: '3.8'
+        include-prereleases: true
 
   test:
     needs: get-python-versions
