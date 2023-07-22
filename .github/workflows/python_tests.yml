@@ -28,6 +28,8 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ${{ fromJson(needs.get-python-versions.outputs.python-matrix) }}
+        L: [10, 20]
+        n: [10000, 20000, 30000]
 
     steps:
     - uses: actions/checkout@v3
@@ -35,5 +37,28 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Run ising_model.py
-      run: python ising_model.py 10 1000
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install matplotlib
+    - name: Run Ising Model Simulation
+      run: |
+        python ising_model.py ${{ matrix.L }} ${{ matrix.n }} > results_${{ matrix.python-version }}_L${{ matrix.L }}_n${{ matrix.n }}.txt
+    - name: Generate plots
+      run: python generate_plots.py
+    - name: Update index.html
+      run: python update_index.py
+    - name: Commit results
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add results*.txt
+        git add *.png
+        git add index.html
+        git commit -m "Add simulation results" || echo "No changes to commit"
+        git push
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: .
