@@ -15,9 +15,8 @@ def parse_results(file):
         if "Average heat capacity" in line:
             results["Average heat capacity"] = float(line.split(':')[-1].strip())
         # add more keys as needed
+    print(f"Parsed results: {results}")
     return results
-
-import os
 
 def plot_results(results, L, n):
     python_versions = list(results.keys())
@@ -32,7 +31,10 @@ def plot_results(results, L, n):
     # Ensure the plots directory exists
     os.makedirs("plots", exist_ok=True)
 
-    plt.savefig(f"plots/time_L{L}_n{n}.png")
+    output_file = f"plots/time_L{L}_n{n}.png"
+    plt.savefig(output_file)
+
+    print(f"Plot saved to: {output_file}")  
 
 def main():
     results = {}
