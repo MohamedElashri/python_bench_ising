@@ -2,13 +2,20 @@ import os
 import matplotlib.pyplot as plt
 
 def parse_results(file):
-    with open(file, 'r') as f:
-        lines = f.readlines()
-        time = float(lines[-7].split('=')[-1].strip())
-        avg_energy = float(lines[-6].split(':')[-1].strip())
-        avg_magnetization = float(lines[-5].split(':')[-1].strip())
-        avg_heat_capacity = float(lines[-4].split(':')[-1].strip())
-    return time, avg_energy, avg_magnetization, avg_heat_capacity
+    with open(file) as f:
+        lines = f.read().splitlines()
+    results = {}
+    for line in lines:
+        if "Time it took in seconds is" in line:
+            results["time"] = float(line.split('=')[-1].strip())
+        if "Average energy" in line:
+            results["Average energy"] = float(line.split(':')[-1].strip())
+        if "Average magnetization" in line:
+            results["Average magnetization"] = float(line.split(':')[-1].strip())
+        if "Average heat capacity" in line:
+            results["Average heat capacity"] = float(line.split(':')[-1].strip())
+        # add more keys as needed
+    return results
 
 def plot_results(results, L, n):
     python_versions = results.keys()
