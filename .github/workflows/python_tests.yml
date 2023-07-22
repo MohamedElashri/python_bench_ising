@@ -14,7 +14,7 @@ jobs:
       matrix:
         python-version: ['3.8', '3.9', '3.10', '3.11']
         L: [10, 20]
-        n: [10000, 20000, 30000]
+        n: [100, 200, 300]
 
     steps:
     - uses: actions/checkout@v3
