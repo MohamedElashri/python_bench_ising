@@ -10,24 +10,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  get-python-versions:
-    runs-on: ubuntu-latest
-    outputs:
-      python-matrix: ${{ steps.get-python-versions-action.outputs.latest-python-versions }}
-    steps:
-    - uses: snok/latest-python-versions@v1
-      id: get-python-versions-action
-      with:
-        min-version: '3.8'
-        include-prereleases: true
-
   test:
-    needs: get-python-versions
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        python-version: ${{ fromJson(needs.get-python-versions.outputs.python-matrix) }}
+        python-version: ['3.8', '3.9', '3.10', '3.11']
         L: [10, 20]
         n: [10000, 20000, 30000]
 
