@@ -27,7 +27,7 @@ def plot_results(results, L, n):
     plt.title(f"Execution time for different Python versions (L={L}, n={n})")
 
 
-    output_file = f"plots/time_L{L}_n{n}.png"
+    output_file = f"time_L{L}_n{n}.png"
     plt.savefig(output_file)
     plt.close()  
     print(f"Plot saved to: {output_file}")  
