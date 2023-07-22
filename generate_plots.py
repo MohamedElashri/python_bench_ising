@@ -17,6 +17,8 @@ def parse_results(file):
         # add more keys as needed
     return results
 
+import os
+
 def plot_results(results, L, n):
     python_versions = list(results.keys())
     times = [results[v]["time"] for v in python_versions]
@@ -26,6 +28,10 @@ def plot_results(results, L, n):
     plt.xlabel("Python version")
     plt.ylabel("Execution time (s)")
     plt.title(f"Execution time for different Python versions (L={L}, n={n})")
+
+    # Ensure the plots directory exists
+    os.makedirs("plots", exist_ok=True)
+
     plt.savefig(f"plots/time_L{L}_n{n}.png")
 
 def main():
