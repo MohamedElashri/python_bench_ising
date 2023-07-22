@@ -1,4 +1,4 @@
-name: Test code
+name: Run Simulation
 
 on:
   push:
@@ -10,43 +10,61 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
+  run-simulation:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.8', '3.9']
+        python-version: ['3.8', '3.9', '3.10']
         L: [10, 20]
         n: [10000, 20000, 30000]
 
     steps:
-    - uses: softprops/turnstyle@v1
-      with:
-        same-branch-only: 'true'
-        continue-after-seconds: 7200
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
     - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
-    
     - name: Run Ising Model Simulation
       run: |
         python ising_model.py ${{ matrix.L }} ${{ matrix.n }} > results_${{ matrix.python-version }}_L${{ matrix.L }}_n${{ matrix.n }}.txt
+    - name: Archive simulation results
+      uses: actions/upload-artifact@v2
+      with:
+        name: results
+        path: |
+          results_${{ matrix.python-version }}_L${{ matrix.L }}_n${{ matrix.n }}.txt
+          *.png
 
-    - name: Commit and push results
+  update-gh-pages:
+    needs: run-simulation
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Download simulation results
+      uses: actions/download-artifact@v2
+      with:
+        name: results
+    - name: Generate index.html
+      run: python generate_index.py
+    - name: Checkout gh-pages branch
+      run: |
+        git fetch
+        git checkout gh-pages || git checkout --orphan gh-pages
+    - name: Move results and plots to gh-pages branch
+      run: |
+        mkdir -p plots
+        mv results*.txt plots/
+        mv *.png plots/
+        mv index.html plots/
+    - name: Commit results
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git pull --rebase
-        git add index.html plots/*.png results*.txt
-        git commit -m "Add simulation results" || echo "No changes to commit"
-        git push
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
+        git add plots/*
+        git commit -m "Update simulation results" || echo "No changes to commit"
+    - name: Push changes
+      uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: .
+        branch: gh-pages
