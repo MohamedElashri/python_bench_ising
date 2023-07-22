@@ -31,8 +31,7 @@ jobs:
         name: results
         path: |
           results_${{ matrix.python-version }}_L${{ matrix.L }}_n${{ matrix.n }}.txt
-          *.png
-
+          plots/*.png
   update-gh-pages:
     needs: run-simulation
     runs-on: ubuntu-latest
@@ -52,7 +51,7 @@ jobs:
       run: |
         mkdir -p plots
         mv results*.txt plots/
-        mv *.png plots/
+        mv plots/*.png plots/
         mv index.html plots/
     - name: Commit results
       run: |
