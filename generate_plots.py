@@ -18,19 +18,15 @@ def parse_results(file):
     return results
 
 def plot_results(results, L, n):
-    python_versions = results.keys()
-    times = [results[v][0] for v in python_versions]
-    avg_energies = [results[v][1] for v in python_versions]
-    avg_magnetizations = [results[v][2] for v in python_versions]
-    avg_heat_capacities = [results[v][3] for v in python_versions]
+    python_versions = list(results.keys())
+    times = [results[v]["time"] for v in python_versions]
 
     plt.figure(figsize=(10, 6))
-    plt.plot(python_versions, times, label='Execution Time')
-    plt.plot(python_versions, avg_energies, label='Average Energy')
-    plt.plot(python_versions, avg_magnetizations, label='Average Magnetization')
-    plt.plot(python_versions, avg_heat_capacities, label='Average Heat Capacity')
-    plt.legend()
-    plt.savefig(f'plots_L{L}_n{n}.png')
+    plt.bar(python_versions, times)
+    plt.xlabel("Python version")
+    plt.ylabel("Execution time (s)")
+    plt.title(f"Execution time for different Python versions (L={L}, n={n})")
+    plt.savefig(f"plots/time_L{L}_n{n}.png")
 
 def main():
     results = {}
