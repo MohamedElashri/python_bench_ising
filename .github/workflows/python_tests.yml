@@ -1,10 +1,7 @@
-name: Run Simulation
+name: Run Simulation && Publish Results
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
     branches:
       - main
   workflow_dispatch:
@@ -15,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.8', '3.9', '3.10']
+        python-version: ['3.8', '3.9', '3.10', '3.11']
         L: [10, 20]
         n: [10000, 20000, 30000]
 
