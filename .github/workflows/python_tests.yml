@@ -49,6 +49,9 @@ jobs:
       run: pip install matplotlib
     - name: Generate plots
       run: python generate_plots.py
+    - name: List directory contents
+      run: ls -al
+
     - name: Generate index.html
       run: python generate_index.py
     - name: Checkout gh-pages branch
