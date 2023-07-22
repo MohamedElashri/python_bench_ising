@@ -31,7 +31,7 @@ jobs:
         name: results
         path: |
           results_${{ matrix.python-version }}_L${{ matrix.L }}_n${{ matrix.n }}.txt
-          plots/*.png
+          *.png
   update-gh-pages:
     needs: run-simulation
     runs-on: ubuntu-latest
@@ -41,6 +41,14 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: results
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.x
+    - name: Install matplotlib
+      run: pip install matplotlib
+    - name: Generate plots
+      run: python generate_plots.py
     - name: Generate index.html
       run: python generate_index.py
     - name: Checkout gh-pages branch
@@ -51,7 +59,7 @@ jobs:
       run: |
         mkdir -p plots
         mv results*.txt plots/
-        mv plots/*.png plots/
+        mv *.png plots/
         mv index.html plots/
     - name: Commit results
       run: |
