@@ -55,7 +55,7 @@ jobs:
       run: |
         git fetch
         git checkout gh-pages || git checkout --orphan gh-pages
-    - name: Create plots directory and move files
+    - name: Move files to the root directory
       run: |
         mkdir -p plots
         mv results*.txt plots/
@@ -64,7 +64,7 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add .
+        git add index.html plots/*
         git commit -m "Update simulation results" || echo "No changes to commit"
     - name: Push changes
       uses: ad-m/github-push-action@master
