@@ -15,7 +15,7 @@ html_template = """
 
 plot_template = """
 <h2>Plot for L={L}, n={n}</h2>
-<img src="plots/plot_L{L}_n{n}.png" alt="Plot for L={L}, n={n}">
+<img src="plot_L{L}_n{n}.png" alt="Plot for L={L}, n={n}">
 """
 
 plots_html = ""

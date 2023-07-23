@@ -63,13 +63,12 @@ jobs:
       run: |
         mkdir -p plots
         mv results*.txt plots/
-        mv *.png plots/
-        mv index.html plots/
+        mv time*.png plots/
     - name: Commit results
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add plots/*
+        git add index.html plots/*
         git commit -m "Update simulation results" || echo "No changes to commit"
     - name: Push changes
       uses: ad-m/github-push-action@master
