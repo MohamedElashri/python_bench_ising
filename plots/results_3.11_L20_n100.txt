@@ -1,0 +1,11 @@
+Time it took in seconds is = 3.043468713760376
+It took 0.05072447856267293 minutes to execute the code
+Average energy: -2.219232727272727
+Average magnetization: 0.11306606060606063
+Average heat capacity: 0.0002800940217279879
+Minimum energy: -3.0620000000000016
+Minimum magnetization: 0.006200000000000003
+Minimum heat capacity: 1.6037956491568948e-05
+Maximum energy: -0.8194
+Maximum magnetization: 0.35015000000000013
+Maximum heat capacity: 0.0038389218750001395
