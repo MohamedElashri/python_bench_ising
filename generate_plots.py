@@ -11,27 +11,27 @@ def parse_results(file):
             results["time"] = float(line.split('=')[-1].strip())
     return results
 
-def plot_results(results, L_values, n_values, python_versions):
+def plot_results(results, parameter_values, python_versions, fixed_param, fixed_value):
     x = np.arange(len(python_versions))
     width = 0.2  # the width of the bars
 
     fig, ax = plt.subplots(figsize=(10, 6))
 
-    for i, n in enumerate(n_values):
-        times = [results[(L_values[i], n)][v]["time"] for v in python_versions]
-        rects = ax.bar(x - (len(n_values)/2 - i)*width, times, width, label=f'n={n}')
+    for i, param in enumerate(parameter_values):
+        times = [results[v].get((fixed_value, param), {"time": np.nan})["time"] for v in python_versions]
+        rects = ax.bar(x - (len(parameter_values)/2 - i)*width, times, width, label=f'{fixed_param}={fixed_value}, varying_param={param}')
 
-    # Add some text for labels, title, and custom x-axis tick labels, etc.
+    # Add some text for labels, title and custom x-axis tick labels, etc.
     ax.set_xlabel('Python version')
     ax.set_ylabel('Execution time (s)')
-    ax.set_title(f'Execution time for different Python versions and n values (L={L_values[0]})')
+    ax.set_title(f'Execution time for different Python versions and {fixed_param} values')
     ax.set_xticks(x)
     ax.set_xticklabels(python_versions)
     ax.legend()
 
     fig.tight_layout()
 
-    output_file = f"time_L{L_values[0]}_n{'+'.join(map(str, n_values))}.png"
+    output_file = f"time_{fixed_param}{fixed_value}_varying.png"
     plt.savefig(output_file)
     plt.close()  
     print(f"Plot saved to: {output_file}") 
@@ -39,7 +39,7 @@ def plot_results(results, L_values, n_values, python_versions):
 def main():
     result_files = [f for f in os.listdir('.') if f.startswith('results_') and f.endswith('.txt')]
 
-    # Group files by (L, n) combination
+    # Group files by python version
     datasets = {}
     python_versions = []
     L_values = []
@@ -55,9 +55,15 @@ def main():
             L_values.append(L)
         if n not in n_values:
             n_values.append(n)
-        datasets[(L, n)] = parse_results(file)
+        if python_version not in datasets:
+            datasets[python_version] = {}
+        datasets[python_version][(L, n)] = parse_results(file)
 
-    plot_results(datasets, L_values, n_values, python_versions)
+    for L in L_values:
+        plot_results(datasets, n_values, python_versions, 'L', L)
+
+    for n in n_values:
+        plot_results(datasets, L_values, python_versions, 'n', n)
 
 if __name__ == "__main__":
     main()
