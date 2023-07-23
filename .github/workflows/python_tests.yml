@@ -51,28 +51,25 @@ jobs:
       run: python generate_plots.py
     - name: Generate index.html
       run: python generate_index.py
-    - name: Create temp directory and move files
+    - name: Create plots directory
+      run: mkdir -p plots
+    - name: Move results and plots to plots directory
       run: |
-        mkdir temp
-        mv index.html temp/
+        mv results*.txt plots/
+        mv time*.png plots/
     - name: Checkout gh-pages branch
       run: |
         git fetch
         git checkout gh-pages || git checkout --orphan gh-pages
-    - name: Move files from temp directory to current
+    - name: Move files to root directory of gh-pages
       run: |
-        mv temp/index.html ./
-    - name: Move results and plots to gh-pages branch
-      run: |
-        mkdir -p plots
-        mv results*.txt plots/
-        mv time*.png plots/
-        mv index.html plots/
+        mv plots/ ./
+        mv index.html ./
     - name: Commit results
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add plots/*
+        git add .
         git commit -m "Update simulation results" || echo "No changes to commit"
     - name: Push changes
       uses: ad-m/github-push-action@master
