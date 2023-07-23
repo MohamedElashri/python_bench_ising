@@ -21,7 +21,7 @@ plot_template = """
 plots_html = ""
 for L in [10, 20]:
     for n in [10000, 20000, 30000]:
-        if os.path.exists(f"plots/plot_L{L}_n{n}.png"):
+        if os.path.exists(f"plot_L{L}_n{n}.png"):
             plots_html += plot_template.format(L=L, n=n)
 
 html = html_template.format(plots=plots_html)
