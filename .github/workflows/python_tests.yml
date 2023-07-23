@@ -64,6 +64,7 @@ jobs:
         mkdir -p plots
         mv results*.txt plots/
         mv time*.png plots/
+        mv index.html .  
     - name: Commit results
       run: |
         git config --local user.email "action@github.com"
