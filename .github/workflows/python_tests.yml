@@ -51,19 +51,15 @@ jobs:
       run: python generate_plots.py
     - name: Generate index.html
       run: python generate_index.py
-    - name: Create plots directory
-      run: mkdir -p plots
-    - name: Move results and plots to plots directory
-      run: |
-        mv results*.txt plots/
-        mv time*.png plots/
     - name: Checkout gh-pages branch
       run: |
         git fetch
         git checkout gh-pages || git checkout --orphan gh-pages
-    - name: Move files to root directory of gh-pages
+    - name: Create plots directory and move files
       run: |
-        mv index.html ./
+        mkdir -p plots
+        mv results*.txt plots/
+        mv time*.png plots/
     - name: Commit results
       run: |
         git config --local user.email "action@github.com"
