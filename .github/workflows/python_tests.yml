@@ -63,7 +63,6 @@ jobs:
         git checkout gh-pages || git checkout --orphan gh-pages
     - name: Move files to root directory of gh-pages
       run: |
-        mv plots/ ./
         mv index.html ./
     - name: Commit results
       run: |
