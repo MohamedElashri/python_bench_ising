@@ -1,6 +1,7 @@
 import os
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
+import numpy as np
 
 def parse_results(file):
     with open(file) as f:
@@ -24,13 +25,13 @@ def assign_colors(unique_values):
 
 def plot_results(python_results, L, color_dict):
     python_versions = list(python_results.keys())
+    bar_width = 0.8 / len(python_versions) # determine the width of the bars
 
-    for version in python_versions:
-        n_values = list(python_results[version].keys())
-        times = [python_results[version][n]["time"] for n in n_values]
-        colors = [color_dict[n] for n in n_values]
-        plt.scatter(n_values, times, c=colors, label=f"Python {version}")
-        plt.plot(n_values, times, '-')
+    for i, version in enumerate(python_versions):
+        n_values = [int(n) for n in python_results[version].keys()]
+        times = [python_results[version][str(n)]["time"] for n in n_values]
+        colors = [color_dict[str(n)] for n in n_values]
+        plt.bar(np.array(n_values) + i*bar_width, times, color=colors, width=bar_width, label=f"Python {version}")
 
     plt.xlabel("n")
     plt.ylabel("Execution time (s)")
