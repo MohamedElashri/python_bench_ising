@@ -49,12 +49,16 @@ jobs:
       run: pip install matplotlib
     - name: Generate plots
       run: python generate_plots.py
+    - name: Copy scripts to temp directory
+      run: |
+        mkdir temp_scripts
+        cp generate_plots.py generate_index.py temp_scripts/
     - name: Checkout gh-pages branch
       run: |
         git fetch
         git checkout gh-pages || git checkout --orphan gh-pages
     - name: Generate index.html
-      run: python generate_index.py
+      run: python temp_scripts/generate_index.py
     - name: Commit results
       run: |
         git config --local user.email "action@github.com"
