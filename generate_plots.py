@@ -1,5 +1,6 @@
 import os
 import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
 
 def parse_results(file):
     with open(file) as f:
@@ -16,18 +17,28 @@ def parse_results(file):
             results["Average heat capacity"] = float(line.split(':')[-1].strip())
     return results
 
-def plot_results(results, L, n):
-    python_versions = list(results.keys())
-    times = [results[v]["time"] for v in python_versions]
+def assign_colors(unique_values):
+    cmap = plt.cm.get_cmap('viridis', len(unique_values))
+    color_dict = {val: cmap(i) for i, val in enumerate(unique_values)}
+    return color_dict
 
-    plt.figure(figsize=(10, 6))
-    plt.bar(python_versions, times)
-    plt.xlabel("Python version")
+def plot_results(python_results, L, color_dict):
+    python_versions = list(python_results.keys())
+
+    for version in python_versions:
+        n_values = list(python_results[version].keys())
+        times = [python_results[version][n]["time"] for n in n_values]
+        colors = [color_dict[n] for n in n_values]
+        plt.scatter(n_values, times, c=colors, label=f"Python {version}")
+        plt.plot(n_values, times, '-')
+
+    plt.xlabel("n")
     plt.ylabel("Execution time (s)")
-    plt.title(f"Execution time for different Python versions (L={L}, n={n})")
+    plt.legend()
+    plt.title(f"Execution time for different Python versions (L={L})")
+    plt.grid()
 
-
-    output_file = f"time_L{L}_n{n}.png"
+    output_file = f"time_L{L}.png"
     plt.savefig(output_file)
     plt.close()  
     print(f"Plot saved to: {output_file}")  
@@ -35,22 +46,26 @@ def plot_results(results, L, n):
 def main():
     result_files = [f for f in os.listdir('.') if f.startswith('results_') and f.endswith('.txt')]
 
-    # Group files by (L, n) combination
-    datasets = {}
+    # Group files by Python version and (L, n) combination
+    python_results = {}
     for file in result_files:
         parts = file.split('_')
-        dataset_key = (parts[2][1:], parts[3].split('.')[0][1:])
-        if dataset_key not in datasets:
-            datasets[dataset_key] = []
-        datasets[dataset_key].append(file)
+        python_version = parts[1]
+        L = parts[2][1:]
+        n = parts[3].split('.')[0][1:]
+        if python_version not in python_results:
+            python_results[python_version] = {}
+        if L not in python_results[python_version]:
+            python_results[python_version][L] = {}
+        python_results[python_version][L][n] = parse_results(file)
 
-    # Parse results and generate plots for each (L, n) combination
-    for (L, n), files in datasets.items():
-        results = {}
-        for file in files:
-            python_version = file.split('_')[1]
-            results[python_version] = parse_results(file)
-        plot_results(results, L, n)
+    # Generate plots for each L
+    L_values = set([L for python_version in python_results.values() for L in python_version.keys()])
+    n_values = set([n for L_dict in python_results.values() for n_dict in L_dict.values() for n in n_dict.keys()])
+    color_dict = assign_colors(n_values)
+    for L in L_values:
+        L_python_results = {python_version: results[L] for python_version, results in python_results.items() if L in results}
+        plot_results(L_python_results, L, color_dict)
 
 if __name__ == "__main__":
     main()
