@@ -51,15 +51,21 @@ jobs:
       run: python generate_plots.py
     - name: Generate index.html
       run: python generate_index.py
+    - name: List directory after generating index.html
+      run: ls -al
     - name: Checkout gh-pages branch
       run: |
         git fetch
         git checkout gh-pages || git checkout --orphan gh-pages
+    - name: List directory after checkout
+      run: ls -al
     - name: Move files to the root directory
       run: |
         mkdir -p plots
         mv results*.txt plots/
         mv time*.png plots/
+    - name: List directory after moving files
+      run: ls -al
     - name: Commit results
       run: |
         git config --local user.email "action@github.com"
