@@ -67,13 +67,13 @@ jobs:
     - name: Move files from temp directory to current
       run: |
         mv temp/index.html ./
-    
     - name: Move results and plots to gh-pages branch
       run: |
         mkdir -p plots
         mv results*.txt plots/
         mv time*.png plots/
-
+        mv index.html plots/
+      
     - name: Commit results
       run: |
         git config --local user.email "action@github.com"

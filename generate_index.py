@@ -20,7 +20,7 @@ plot_template = """
 
 plots_html = ""
 for L in [10, 20]:
-    for n in [10000, 20000, 30000]:
+    for n in [100, 200, 300]:
         if os.path.exists(f"plot_L{L}_n{n}.png"):
             plots_html += plot_template.format(L=L, n=n)
 
